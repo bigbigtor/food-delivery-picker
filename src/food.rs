@@ -3,6 +3,7 @@ use serde::{Serialize, Deserialize};
 
 #[derive(Serialize, Deserialize)]
 pub struct Food {
+    id: u64,
     name: String,
 }
 
@@ -10,10 +11,15 @@ pub struct Food {
 async fn get_foods() -> impl Responder {
     web::Json(
         vec![
-            Food { name: "apple".to_owned()},
-            Food { name: "pear".to_owned()}
+            Food { id: 0, name: "apple".to_owned()},
+            Food { id: 1, name: "pear".to_owned()}
         ]
     )
+}
+
+#[get("/food/{id}")]
+async fn get_food_by_id(path: web::Path<u64>) -> impl Responder {
+    web::Json(Food { id: *path, name: "burger".to_owned() })
 }
 
 #[post("/food")]

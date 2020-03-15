@@ -6,7 +6,7 @@ mod food;
 async fn main() -> std::io::Result<()> {
     let mut listenfd = ListenFd::from_env();
     let mut server = HttpServer::new(|| {
-        App::new().service(food::get_foods).service(food::post_food)
+        App::new().service(food::get_foods).service(food::get_food_by_id).service(food::post_food)
     });
     server = if let Some(l) = listenfd.take_tcp_listener(0).unwrap() {
         server.listen(l)?
