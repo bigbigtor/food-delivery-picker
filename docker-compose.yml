@@ -1,0 +1,32 @@
+version: '3'
+services:
+
+  app:
+    build: .
+    depends_on:
+      - db
+    env_file:
+      - .env
+    volumes: 
+      - .:/usr/app
+    ports:
+      - 3000:3000
+    
+  db:
+    image: postgres:12.2-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: food
+      POSTGRES_PASSWORD: lover
+      POSTGRES_DB: food_delivery_picker
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+  
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+volumes:
+  pg_data:
