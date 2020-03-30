@@ -1,28 +1,18 @@
 use actix_web::{web, get, post, Responder};
-use serde::{Serialize, Deserialize};
-
-#[derive(Serialize, Deserialize)]
-pub struct Food {
-    id: u64,
-    name: String,
-}
+use crate::models::NewFood;
+use crate::food_repo;
 
 #[get("/food")]
 async fn get_foods() -> impl Responder {
-    web::Json(
-        vec![
-            Food { id: 0, name: "apple".to_owned()},
-            Food { id: 1, name: "pear".to_owned()}
-        ]
-    )
+    web::Json(food_repo::get_foods())
 }
 
 #[get("/food/{id}")]
-async fn get_food_by_id(path: web::Path<u64>) -> impl Responder {
-    web::Json(Food { id: *path, name: "burger".to_owned() })
+async fn get_food_by_id(id: web::Path<i32>) -> impl Responder {
+    web::Json(food_repo::get_food_by_id(*id))
 }
 
 #[post("/food")]
-async fn post_food(food: web::Json<Food>) -> impl Responder {
-    String::from(&food.name)
+async fn post_food(food: web::Json<NewFood>) -> impl Responder {
+    web::Json(food_repo::save_food(&*food))
 }
